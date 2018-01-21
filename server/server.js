@@ -14,14 +14,15 @@ const io = socketIO(server);
 io.on('connection', (socket) => {
   console.log('New User connected')
 
-  socket.emit('newMessage', {
-    from: 'Wura',
-    text: 'wow wow ',
-    createdAt: 2134
-  })
 
   socket.on('createMessage', (message) => {
     console.log('message', message)
+    // io emits event to all subscribed connections
+    io.emit('newMessage', {
+      from: message.from,
+      text: message.text,
+      createdAt: new Date().getTime()
+    })
   })
 
   socket.on('disconnect', () => {
