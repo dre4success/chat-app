@@ -11,25 +11,39 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIO(server);
 
-io.on('connection', (socket) => {
-  console.log('New User connected')
+io.on('connection', socket => {
+  console.log('New User connected');
 
+  socket.emit('newUser', {
+    from: 'Admin',
+    text: 'Welcome to the chat app',
+    createdAt: new Date().getTime()
+  });
+  socket.broadcast.emit('newUser', {
+    from: 'Admin',
+    text: 'A new user joined',
+    createdAt: new Date().getTime()
+  });
 
-  socket.on('createMessage', (message) => {
-    console.log('message', message)
-    // io emits event to all subscribed connections
+  socket.on('createMessage', message => {
+    console.log('message', message);
+
     io.emit('newMessage', {
       from: message.from,
       text: message.text,
       createdAt: new Date().getTime()
-    })
-  })
+    });
+    /*     socket.broadcast.emit('newMessage', {
+      from: message.from,
+      text: message.text,
+      createdAt: new Date().getTime()
+    }); */
+  });
 
   socket.on('disconnect', () => {
-    console.log('Disconnected from user')
-  })
-})
-
+    console.log('Disconnected from user');
+  });
+});
 
 app.use(express.static(publicPath));
 
