@@ -9,19 +9,21 @@ socket.on('connect', () => {
 });
 
 socket.on('newMessage', message => {
-  console.log('New Message ', message);
+  let formattedTime = moment(message.createdAt).format('h:mm a');
   // let li = $('<li></li>');
   let li = document.createElement('li');
-  li.innerText = `${message.from}: ${message.text}`;
+  li.innerText = `${message.from} ${formattedTime}: ${message.text}`;
   // li.text(`${message.from}: ${message.text}`);
   document.querySelector('#messages').appendChild(li);
   // $('#messages').append(li);
 });
 
 socket.on('newLocationMessage', message => {
+  let formattedTime = moment(message.createdAt).format('h:mm a');
+
   let li = document.createElement('li');
   let a = document.createElement('a');
-  li.innerText = `${message.from}: `;
+  li.innerText = `${message.from}: ${formattedTime} `;
   let content = document.createTextNode('My current Location');
   a.appendChild(content);
   a.setAttribute('target', '_blank');
