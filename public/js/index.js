@@ -9,29 +9,50 @@ socket.on('connect', () => {
 });
 
 socket.on('newMessage', message => {
-  let formattedTime = moment(message.createdAt).format('h:mm a');
+  /*   
   // let li = $('<li></li>');
   let li = document.createElement('li');
   li.innerText = `${message.from} ${formattedTime}: ${message.text}`;
   // li.text(`${message.from}: ${message.text}`);
   document.querySelector('#messages').appendChild(li);
-  // $('#messages').append(li);
+  // $('#messages').append(li); */
+
+  //  let template = $('#message-template').html()
+  //  $('#messages').append(html)
+  let formattedTime = moment(message.createdAt).format('h:mm a');
+  let template = document.querySelector('#message-template').innerHTML;
+  let html = Mustache.render(template, {
+    text: message.text,
+    from: message.from,
+    createdAt: formattedTime
+  });
+
+  document.querySelector('#messages').innerHTML += html;
 });
 
 socket.on('newLocationMessage', message => {
+  /*   
+
+let li = document.createElement('li');
+let a = document.createElement('a');
+li.innerText = `${message.from}: ${formattedTime} `;
+let content = document.createTextNode('My current Location');
+a.appendChild(content);
+a.setAttribute('target', '_blank');
+a.setAttribute('href', message.url);
+
+li.appendChild(a);
+document.querySelector('#messages').appendChild(li); */
   let formattedTime = moment(message.createdAt).format('h:mm a');
-
-  let li = document.createElement('li');
-  let a = document.createElement('a');
-  li.innerText = `${message.from}: ${formattedTime} `;
-  let content = document.createTextNode('My current Location');
-  a.appendChild(content);
-  a.setAttribute('target', '_blank');
-  a.setAttribute('href', message.url);
-
-  li.appendChild(a);
-  document.querySelector('#messages').appendChild(li);
+  let template = document.querySelector('#location-message-template').innerHTML;
+  let html = Mustache.render(template, {
+    url: message.url,
+    from: message.from,
+    createdAt: formattedTime
+  });
+  document.querySelector('#messages').innerHTML += html;
 });
+
 
 socket.on('disconnect', () => {
   console.log('Disconnected from server');
