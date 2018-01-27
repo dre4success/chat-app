@@ -89,6 +89,23 @@ socket.on('disconnect', () => {
   console.log('Disconnected from server');
 });
 
+socket.on('updateUserList', users => {
+/*   let ol = document.createElement('ol');
+
+  users.forEach(user => {
+    let li = document.createElement('li');
+    li.textContent = user;
+    ol.appendChild(li);
+  });
+  console.log(ol);
+  document.querySelector('#users').appendChild(ol); */
+  let ol = $('<ol></ol>')
+  users.forEach(user => {
+    ol.append($('<li></li>').text(user))
+  })
+  $('#users').html(ol)
+});
+
 const message = document.querySelector('#message-form');
 
 message.addEventListener('submit', function(e) {
